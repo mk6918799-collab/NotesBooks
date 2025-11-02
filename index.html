@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookNotes Pro - تطبيق القراءة والملاحظات</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- شاشة التحميل -->
+  <div id="loading">
+    <div class="loader">BookNotes Pro 📚</div>
+  </div>
+
+  <!-- التطبيق الرئيسي -->
+  <div id="app" class="hidden">
+    <!-- الهيدر -->
+    <header class="header">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <h1 class="app-title">BookNotes</h1>
+      <button class="search-btn" id="searchBtn">🔍</button>
+    </header>
+
+    <!-- شريط البحث -->
+    <div class="search-bar hidden" id="searchBar">
+      <input type="text" id="searchInput" placeholder="ابحث في الكتب والملاحظات...">
+      <button id="closeSearch">✕</button>
+    </div>
+
+    <!-- القائمة الجانبية -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>القائمة</h2>
+        <button id="closeSidebar">✕</button>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="#" data-page="home">🏠 الرئيسية</a></li>
+        <li><a href="#" data-page="library">📚 مكتبتي</a></li>
+        <li><a href="#" data-page="notes">✏️ ملاحظاتي</a></li>
+        <li><a href="#" data-page="favorites">⭐ المفضلة</a></li>
+        <li><a href="#" data-page="settings">⚙️ الإعدادات</a></li>
+      </ul>
+    </nav>
+
+    <!-- المحتوى -->
+    <main class="main-content">
+      <section id="home-page" class="page active">
+        <div class="welcome-section">
+          <h2>مرحباً بك في BookNotes Pro</h2>
+          <p>تطبيق القراءة والملاحظات المتكامل</p>
+        </div>
+
+        <div class="quick-actions">
+          <div class="action-card" data-action="add-book"><span>📖</span><p>إضافة كتاب</p></div>
+          <div class="action-card" data-action="quick-note"><span>✏️</span><p>ملاحظة سريعة</p></div>
+          <div class="action-card" data-action="recent-books"><span>🕒</span><p>آخر الكتب</p></div>
+        </div>
+
+        <div class="stats-section">
+          <div class="stat"><h3 id="total-books">0</h3><p>كتاب</p></div>
+          <div class="stat"><h3 id="total-notes">0</h3><p>ملاحظة</p></div>
+          <div class="stat"><h3 id="reading-time">0</h3><p>ساعة قراءة</p></div>
+        </div>
+      </section>
+
+      <section id="library-page" class="page">
+        <div class="page-header">
+          <h2>مكتبتي</h2>
+          <button class="add-btn" id="addBookBtn">+ إضافة كتاب</button>
+        </div>
+        <div class="books-grid" id="booksGrid"></div>
+      </section>
+
+      <section id="notes-page" class="page">
+        <div class="page-header">
+          <h2>ملاحظاتي</h2>
+          <button class="add-btn" id="addNoteBtn">+ ملاحظة جديدة</button>
+        </div>
+        <div class="notes-list" id="notesList"></div>
+      </section>
+
+      <section id="favorites-page" class="page">
+        <div class="page-header"><h2>المفضلة</h2></div>
+        <div class="favorites-content"></div>
+      </section>
+
+      <section id="settings-page" class="page">
+        <div class="page-header"><h2>الإعدادات</h2></div>
+        <div class="settings-list">
+          <div class="setting-item">
+            <span>الوضع الليلي</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <span>حجم الخط</span>
+            <select id="fontSize">
+              <option value="small">صغير</option>
+              <option value="medium" selected>متوسط</option>
+              <option value="large">كبير</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <span>لغة الترجمة</span>
+            <select id="translationLang">
+              <option value="en">الإنجليزية</option>
+              <option value="fr">الفرنسية</option>
+              <option value="es">الإسبانية</option>
+            </select>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- النوافذ -->
+    <div class="modal hidden" id="addBookModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>إضافة كتاب جديد</h3><button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="bookTitle" placeholder="عنوان الكتاب">
+          <input type="text" id="bookAuthor" placeholder="اسم المؤلف">
+          <textarea id="bookContent" placeholder="محتوى الكتاب..."></textarea>
+          <button id="saveBookBtn">حفظ الكتاب</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="addNoteModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>ملاحظة جديدة</h3><button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="noteTitle" placeholder="عنوان الملاحظة">
+          <textarea id="noteContent" placeholder="محتوى الملاحظة..."></textarea>
+          <button id="saveNoteBtn">حفظ الملاحظة</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="readingModal">
+      <div class="modal-content reading-content">
+        <div class="modal-header">
+          <h3 id="readingTitle">قراءة الكتاب</h3><button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="book-content" id="bookContentDisplay"></div>
+          <div class="reading-tools">
+            <button id="translateBtn">ترجمة</button>
+            <button id="copyTextBtn">نسخ</button>
+            <button id="addToFavoritesBtn">إضافة للمفضلة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="translationModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>ترجمة النص</h3><button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="original-text"><h4>النص الأصلي:</h4><p id="originalText"></p></div>
+          <div class="translated-text"><h4>النص المترجم:</h4><p id="translatedText"></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("✅ Service Worker مسجل بنجاح"))
+      .catch(err => console.error("❌ فشل التسجيل:", err));
+  }
+  </script>
+</body>
+</html>
